@@ -1,4 +1,4 @@
-import {React,useContext} from "react";
+import { React, useContext } from "react";
 
 import { Dialog, Box, Typography, List, ListItem, styled } from "@mui/material";
 
@@ -8,7 +8,9 @@ import { AccountContext } from "../../context/AccountProvider";
 
 import { GoogleLogin } from "@react-oauth/google";
 
-import jwt_decode from 'jwt-decode'
+import { addUser } from "../../service/api";
+
+import jwt_decode from "jwt-decode";
 
 const Component = styled(Box)`
   display: flex;
@@ -53,13 +55,13 @@ const StyledList = styled(List)`
 `;
 
 const LoginDialog = () => {
+  const { setAccount } = useContext(AccountContext);
 
-  const {setAccount} = useContext(AccountContext)
-
-  const onLoginSuccess = (res) => {
-    const decoded = jwt_decode(res.credential)
-    console.log(decoded)
-    setAccount(decoded)
+  const onLoginSuccess = async (res) => {
+    const decoded = jwt_decode(res.credential);
+    console.log(decoded);
+    setAccount(decoded);
+    await addUser(decoded);
   };
 
   const onLoginError = (res) => {
