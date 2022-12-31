@@ -18,7 +18,7 @@ const StyledDivider = styled(Divider)`
   opacity: 0.6;
 `
 
-const Conversations = () => {
+const Conversations = ({text}) => {
   const [users, setUsers] = useState([]);
 
   const { account } = useContext(AccountContext);
@@ -26,10 +26,12 @@ const Conversations = () => {
   useEffect(() => {
     const fetchData = async () => {
       let response = await getUsers();
+      // Search the users written in search bar
+      const filterData = response.filter(user => user.name.toLowerCase(). includes(text.toLowerCase()))
       setUsers(response);
     };
     fetchData();
-  }, []);
+  }, [text]);
 
   return (
     <Component>
