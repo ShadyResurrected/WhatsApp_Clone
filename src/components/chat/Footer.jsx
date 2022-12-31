@@ -1,4 +1,4 @@
-import React from "react";
+import { React } from "react";
 
 import { Box, InputBase, styled } from "@mui/material";
 
@@ -20,30 +20,35 @@ const Container = styled(Box)`
 `;
 
 const Search = styled(Box)`
-background-color: #fff;
-border-radius: 18px;
-width: calc(94% - 100px);
-`
+  background-color: #fff;
+  border-radius: 18px;
+  width: calc(94% - 100px);
+`;
 
 const InputField = styled(InputBase)`
-width: 100%;
-padding: 20px;
-height: 20px;
-padding-left: 25px;
-font-size: 14px;
-`
+  width: 100%;
+  padding: 20px;
+  height: 20px;
+  padding-left: 25px;
+  font-size: 14px;
+`;
 
 const ClipIcon = styled(AttachFileOutlinedIcon)`
-transform: rotate(40deg);
-`
+  transform: rotate(40deg);
+`;
 
-const Footer = () => {
+const Footer = ({ sendText, setValue,value }) => {
   return (
     <Container>
       <EmojiEmotionsOutlinedIcon />
       <ClipIcon />
       <Search>
-        <InputField placeholder="Type a message" />
+        <InputField
+          placeholder="Type a message"
+          onChange={(e) => setValue(e.target.value)}
+          onKeyPress={(e) => sendText(e)}
+          value={value}
+        />
       </Search>
       <KeyboardVoiceIcon />
     </Container>
