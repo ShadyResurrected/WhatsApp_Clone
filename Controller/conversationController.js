@@ -21,3 +21,14 @@ export const newConversation = async (request,response) => {
         return response.status(500).json(error.message)
     }
 }
+
+export const getConversation = async(request,response) => {
+    try {
+        const senderId = request.body.senderId;
+        const receiverId = request.body.receiverId;
+        let Conversation = await conversation.findOne({members: {$all : [receiverId,senderId]}})
+        return response.status(200).json(Conversation)
+    } catch (error) {
+        return response.status(500).json(error.message)
+    }
+}
