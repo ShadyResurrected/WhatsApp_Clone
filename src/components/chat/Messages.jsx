@@ -18,13 +18,15 @@ const Component = styled(Box)`
 `;
 
 const Container = styled(Box)`
-padding: 1px 80px;
-`
+  padding: 1px 80px;
+`;
 
 const Messages = ({ person, conversation }) => {
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState([]);
-  const [newMessageFlag, setNewMessageFlag] = useState(false)
+  const [newMessageFlag, setNewMessageFlag] = useState(false);
+  const [file, setFile] = useState();
+  const [image, setImage] = useState("")
 
   const { account } = useContext(AccountContext);
 
@@ -34,27 +36,41 @@ const Messages = ({ person, conversation }) => {
       setMessages(data);
     };
     conversation._id && getMessageDetails();
-  }, [person._id, conversation._id,newMessageFlag]);
+  }, [person._id, conversation._id, newMessageFlag]);
 
   const sendText = async (e) => {
     const code = e.keyCode || e.which; // this retrieves the code of pressed key
     // code 13 is of enter key
     if (code === 13) {
-      // making a model for message
-      let message = {
-        senderId: account.sub,
-        receiverId: person.sub,
-        conversationId: conversation._id, // id from mongoDB
-        type: "text",
-        text: value,
-      };
+      // When the sent information is not a file
+      let message = []
+      if (!file) {
+        // making a model for message
+        message = {
+          senderId: account.sub,
+          receiverId: person.sub,
+          conversationId: conversation._id, // id from mongoDB
+          type: "text",
+          text: value,
+        };
+      } else {
+        message = {
+          senderId: account.sub,
+          receiverId: person.sub,
+          conversationId: conversation._id, // id from mongoDB
+          type: "file",
+          text: image,
+        };
+      }
 
       await newMessage(message);
 
       // Clearing the text area after saving the message in the database
       setValue("");
+      setFile("")
+      setImage("")
       // toggling the state
-      setNewMessageFlag(prev => !prev)
+      setNewMessageFlag((prev) => !prev);
     }
   };
 
@@ -68,7 +84,14 @@ const Messages = ({ person, conversation }) => {
             </Container>
           ))}
       </Component>
-      <Footer sendText={sendText} setValue={setValue} value={value} />
+      <Footer
+        sendText={sendText}
+        setValue={setValue}
+        value={value}
+        file={file}
+        setFile={setFile}
+        setImage={setImage}
+      />
     </Wrapper>
   );
 };

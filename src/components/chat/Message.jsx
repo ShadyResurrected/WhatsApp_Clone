@@ -4,9 +4,13 @@ import { useContext } from "react";
 
 import { Box, styled, Typography } from "@mui/material";
 
-import { formatDate } from "../../utils/commonUtils";
+import { formatDate,downloadMedia } from "../../utils/commonUtils";
 
 import { AccountContext } from "../../context/AccountProvider";
+
+import DownloadIcon from "@mui/icons-material/Download";
+
+import { iconPDF } from "../../constants/data";
 
 const Own = styled(Box)`
   background: #dcf8c6;
@@ -48,15 +52,67 @@ const Message = ({ message }) => {
     <>
       {account.sub === message.senderId ? (
         <Own>
-          <Text>{message.text}</Text>
-          <Time>{formatDate(message.createdAt)}</Time>
+          {message.type === "file" ? (
+            <ImageMessage message={message} />
+          ) : (
+            <TextMessage message={message} />
+          )}
+          {/* <Text>{message.text}</Text>
+          <Time>{formatDate(message.createdAt)}</Time> */}
         </Own>
       ) : (
         <Wrapper>
-          <Text>{message.text}</Text>
-          <Time>{formatDate(message.createdAt)}</Time>
+          {message.type === "file" ? (
+            <ImageMessage message={message} />
+          ) : (
+            <TextMessage message={message} />
+          )}
         </Wrapper>
       )}
+    </>
+  );
+};
+
+const ImageMessage = ({ message }) => {
+  return (
+    <Box style={{ position: "relative" }}>
+      {message?.text?.includes(".pdf") ? (
+        <Box style={{ display: "flex" }}>
+          <img src={iconPDF} alt="pdf" style={{ width: 80 }} />
+          <Typography style={{ fontSize: 14 }}>
+            {message.text.split("/").pop()}
+          </Typography>
+        </Box>
+      ) : (
+        <img
+          style={{ width: 300, height: "100%", objectFit: "cover" }}
+          src={message.text}
+          alt={message.text}
+        />
+      )}
+      <Time style={{ position: "absolute", bottom: 0, right: 0 }}>
+        <DownloadIcon
+          style={{
+            marginRight: 10,
+            border: "1px solid grey",
+            borderRadius: "50%",
+            borderColor: "grey",
+            color: "white",
+          }}
+          fontSize="small"
+          onClick={(e) => downloadMedia(e, message.text)}
+        />
+        {formatDate(message.createdAt)}
+      </Time>
+    </Box>
+  );
+};
+
+const TextMessage = ({ message }) => {
+  return (
+    <>
+      <Text>{message.text}</Text>
+      <Time>{formatDate(message.createdAt)}</Time>
     </>
   );
 };
