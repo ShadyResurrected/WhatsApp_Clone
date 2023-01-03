@@ -1,5 +1,5 @@
 import { Box, styled } from "@mui/material";
-import { React, useContext, useState, useEffect } from "react";
+import { React, useContext, useState, useEffect, useRef } from "react";
 
 import { AccountContext } from "../../context/AccountProvider";
 import { getMessages, newMessage } from "../../service/api";
@@ -26,9 +26,21 @@ const Messages = ({ person, conversation }) => {
   const [messages, setMessages] = useState([]);
   const [newMessageFlag, setNewMessageFlag] = useState(false);
   const [file, setFile] = useState();
-  const [image, setImage] = useState("")
+  const [image, setImage] = useState("");
+  const [incomingMessage, setIncomingMessage] = useState(null);
 
-  const { account } = useContext(AccountContext);
+  const { account, socket } = useContext(AccountContext);
+
+  useEffect(() => {
+    socket.current.on("getMessage", (data) => {
+      setIncomingMessage({
+        ...data,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  const scrollRef = useRef();
 
   useEffect(() => {
     const getMessageDetails = async () => {
@@ -38,12 +50,22 @@ const Messages = ({ person, conversation }) => {
     conversation._id && getMessageDetails();
   }, [person._id, conversation._id, newMessageFlag]);
 
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ transition: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    incomingMessage &&
+      conversation?.members?.includes(incomingMessage.senderId) &&
+      setMessages((prev) => [...prev, incomingMessage]);
+  }, [incomingMessage, conversation]);
+
   const sendText = async (e) => {
     const code = e.keyCode || e.which; // this retrieves the code of pressed key
     // code 13 is of enter key
     if (code === 13) {
       // When the sent information is not a file
-      let message = []
+      let message = [];
       if (!file) {
         // making a model for message
         message = {
@@ -63,12 +85,14 @@ const Messages = ({ person, conversation }) => {
         };
       }
 
+      socket.current.emit("sendMessage", message);
+
       await newMessage(message);
 
       // Clearing the text area after saving the message in the database
       setValue("");
-      setFile("")
-      setImage("")
+      setFile("");
+      setImage("");
       // toggling the state
       setNewMessageFlag((prev) => !prev);
     }
@@ -79,7 +103,7 @@ const Messages = ({ person, conversation }) => {
       <Component>
         {messages &&
           messages.map((message) => (
-            <Container>
+            <Container ref={scrollRef}>
               <Message message={message} />
             </Container>
           ))}
