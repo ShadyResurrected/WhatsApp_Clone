@@ -1,17 +1,17 @@
-import conversation from "../Model/Conversation.js";
+import Conversation from "../Model/Conversation.js";
 
 export const newConversation = async (request,response) => {
     try {
         const senderId = request.body.senderId;
         const receiverId = request.body.receiverId;
 
-        const exist = await conversation.findOne({members : {$all : [receiverId,senderId]}})
+        const exist = await Conversation.findOne({members : {$all : [receiverId,senderId]}})
 
         if(exist){
             return response.status(200).json('conversation already exists')
         }
 
-        const newConversation = new conversation({
+        const newConversation = new Conversation({
             members : [senderId,receiverId]
         })
 
@@ -26,8 +26,8 @@ export const getConversation = async(request,response) => {
     try {
         const senderId = request.body.senderId;
         const receiverId = request.body.receiverId;
-        let Conversation = await conversation.findOne({members: {$all : [receiverId,senderId]}})
-        return response.status(200).json(Conversation)
+        let ConversationSt = await Conversation.findOne({members: {$all : [receiverId,senderId]}})
+        return response.status(200).json(ConversationSt)
     } catch (error) {
         return response.status(500).json(error.message)
     }
