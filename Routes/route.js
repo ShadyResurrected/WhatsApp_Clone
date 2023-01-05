@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { newConversation, getConversation } from '../controller/conversationController.js';
+import { newConversation, getConversation } from '../Controller/conversationController.js';
 import { addUser, getUsers } from '../controller/userController.js';
 import { newMessage, getMessages }from '../controller/messageController.js';
 import { uploadImage, getImage } from '../controller/imageController.js';
