@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 
 const io = new Server(9000, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://whats-app-clone-alpha.vercel.app", // url of the deployed frontend 
   },
 });
 
