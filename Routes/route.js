@@ -1,9 +1,9 @@
 import express from 'express';
 
 import { newConversation, getConversation } from '../Controller/conversationController.js';
-import { addUser, getUsers } from '../controller/userController.js';
-import { newMessage, getMessages }from '../controller/messageController.js';
-import { uploadImage, getImage } from '../controller/imageController.js';
+import { addUser, getUsers } from '../Controller/userController.js';
+import { newMessage, getMessages }from '../Controller/messageController.js';
+import { uploadImage, getImage } from '../Controller/imageController.js';
 
 import upload from '../utils/upload.js';
 
