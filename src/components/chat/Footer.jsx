@@ -8,7 +8,7 @@ import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import { uploadFile } from "../../service/api";
 
 const Container = styled(Box)`
-  height: 49px;
+  height: 55px;
   background: #ededed;
   display: flex;
   width: 100%;
