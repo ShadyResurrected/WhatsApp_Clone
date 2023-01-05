@@ -18,7 +18,7 @@ const AccountProvider = ({ children }) => {
 
   useEffect(() => {
     // url of the port on which socket is running
-    socket.current = io("ws://localhost:9000");
+    socket.current = io("https://whatsapp-socket-3mww.onrender.com");
   }, []);
 
   return (

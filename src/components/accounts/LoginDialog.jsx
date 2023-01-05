@@ -2,8 +2,6 @@ import { React, useContext } from "react";
 
 import { Dialog, Box, Typography, List, ListItem, styled } from "@mui/material";
 
-import { qrCodeImage } from "../../constants/data";
-
 import { AccountContext } from "../../context/AccountProvider";
 
 import { GoogleLogin } from "@react-oauth/google";
@@ -20,7 +18,7 @@ const Container = styled(Box)`
   padding: 56px 0 56px 56px;
 `;
 
-const QRCode = styled("img")({
+const QRCode = styled("div")({
   height: 264,
   width: 264,
   margin: "50px 0 0 50px",
@@ -74,22 +72,23 @@ const LoginDialog = () => {
         <Container>
           <Title>To use WhatsApp on your computer: </Title>
           <StyledList>
-            <ListItem>1. Open WhatsApp on your phone</ListItem>
+            <ListItem>Log In using react-oauth/google</ListItem>
             <ListItem>
-              2. Tap Menu or Settings and select Linked Devices
+              1. Tap on the button
             </ListItem>
             <ListItem>
-              3. Point your phone to this screen to capture the code
+              2. Login using your google account
             </ListItem>
           </StyledList>
         </Container>
         <Box sx={{ position: "relative" }}>
-          <QRCode src={qrCodeImage} alt="qr code" />
+          <QRCode />
           <Box
             sx={{
               position: "absolute",
               top: "50%",
-              transform: "translateX(25%)",
+              left: "22%",
+              // transform: "translateX(50%)",
             }}
           >
             <GoogleLogin onSuccess={onLoginSuccess} onError={onLoginError} />
